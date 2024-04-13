@@ -6,7 +6,7 @@ decimal_precision = Decimal('0.01')
 saldo = Decimal('0')
 limite = Decimal('500')
 extrato = ""
-numero_saques = 0
+quantidade_saques = 0
 LIMITE_SAQUES = 3
 
 sacar = "[s] Sacar" if saldo > 0 else "[s] Sacar (Não disponível)"
@@ -41,21 +41,22 @@ while True:
         com_saldo = saldo > 0
 
         if not com_saldo:
-            print("Saque não disponível")
+            print("Saque não disponível. Verifique seu saldo.")
         
         else:
             valor_saque = Decimal(input("Informe o valor do saque: "))
 
-            if 0 < valor_saque <= saldo and valor_saque <= limite and numero_saques < LIMITE_SAQUES:
+            if 0 < valor_saque <= saldo and valor_saque <= limite and quantidade_saques < LIMITE_SAQUES:
             
                 saldo -= valor_saque
             
                 extrato += f"{time.strftime('%d/%m/%y %X')} |    Saque      |   (R$ {valor_saque:.2f})\n"
             
-                numero_saques += 1
+                quantidade_saques += 1
+                
        
             else:
-                print("Operação falhou! Verifique seu saldo, limite de saque ou número de saques.")
+                print("Operação falhou! Verifique seu limite de saque ou quantidade de saques.")
 
     elif opcao == "e":
 
