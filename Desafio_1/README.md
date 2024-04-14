@@ -1,5 +1,6 @@
 Usando como base o código fornecido pelo Guilherme, fiz algumas alterações:
 
+- mudei de float para decimal. (Ahei que ficou melhor)
 - relacionadas a estética;
 - quando selecionada a opção sacar se não tiver saldo já aparece uma mensagem de erro sem precisar digitar o valor. 
 - quando realiza uma transação , fica registrado a data e horário. E é exibido no extrato.
