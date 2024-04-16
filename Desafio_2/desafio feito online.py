@@ -136,7 +136,7 @@ def menu_contas():
 
 def menu_operacoes():
 
-    menu = f"""
+    menu_operacoes = f"""
     Olá, , Conta: 
         
     [1] Depositar
@@ -150,7 +150,7 @@ def menu_operacoes():
     Digite a opção desejada e telcle [Enter]
     => """
 
-    return input(menu)
+    return input(menu_operacoes)
     
 def acesso_menu_operacoes():
 
@@ -219,7 +219,7 @@ def acesso_menu_contas():
             conta = input("Informe a conta: ")
 
             if conta in contas:
-                acesso_menu_operacoes()
+            acesso_menu_operacoes()
 
             else:
                 print("Conta não encontrada, use uma conta valida ou crie uma conta!")    
@@ -257,14 +257,14 @@ def acesso_menu_usuarios():
         if opcao == '1':
 
             cpf = input("Digite o CPF do usuário: ")
-            # usuario = filtrar_usuario(cpf, usuarios)
+            usuario = filtrar_usuario(cpf, usuarios)
 
-            # if usuario:
-            acesso_menu_contas()
+            if usuario:
+                acesso_menu_contas()
 
-            # else:
-               # print("usuario não encontrado, crie um usuário.")
-               # acesso_menu_usuarios    
+            else:
+                print("usuario não encontrado, crie um usuário.")
+                acesso_menu_usuarios    
 
         elif opcao == '2':
             criar_usuario(usuarios)
