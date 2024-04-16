@@ -5,7 +5,7 @@ decimal_precision = Decimal('0.01')
 usuarios = []
 contas = []
 LIMITE_SAQUES = 3
-
+AGENCIA = 0001
 
 def filtrar_usuario(cpf, usuarios):
     
@@ -29,27 +29,28 @@ def criar_usuario(usuarios):
 
     print("Usuário criado com sucesso!")
 
-def criar_conta(agencia, numero_conta, usuarios):
+def criar_conta(agencia, conta_cc, usuarios):
     cpf = input("Informe o CPF do usuário: ")
     usuario = filtrar_usuario(cpf, usuarios)
 
     if usuario:
-        print("\n Conta criada com sucesso!")
-        return {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
+        print("\n Conta corrente criada com sucesso!")
+        return {"agencia": AGENCIA, "conta_cc": conta_cc, "usuario": usuario}
     
-    print("\nUsuário não encontrado, criação de conta encerrada!")
+    else:
+        print("\nUsuário não encontrado, criação de conta encerrada!")
 
 def filtrar_contas(cpf, contas):
-    contas_filtradas = [conta for conta in contas if conta['usuario']['cpf'] == cpf]
+    contas_filtradas = [conta_cc for conta_cc in contas if conta_cc['usuario']['cpf'] == cpf]
     return contas_filtradas if contas_filtradas else None
 
 
 def listar_contas(contas):
-    for conta in contas:
+    for conta_cc in contas:
         linha = f"""\
-            Agência:\t{conta['agencia']}
-            C/C:\t\t{conta['numero_conta']}
-            Titular:\t{conta['usuario']['nome']}
+            Agência:\t{conta_cc['agencia']}
+            C/C:\t\t{conta_cc['numero_conta']}
+            Titular:\t{conta_cc['usuario']['nome']}
         """
         print("=" * 100)
         print(linha)   
@@ -57,7 +58,7 @@ def listar_contas(contas):
 def depositar(saldo, valor_deposito, extrato):
     if valor_deposito > 0:
         saldo += valor_deposito
-        extrato += f"Depósito:\tR$ {valor_deposito:.2f}\n"
+        extrato += f"{time.strftime('%d/%m/%y %X')}  |    Depósito   |  R$ {valor_deposito:.2f}\n"
         print("\nDepósito realizado com sucesso!")
     else:
         print("\nValor de depósito inválido. O valor deve ser maior que zero.")
@@ -79,7 +80,7 @@ def sacar(*, saldo, valor_saque, extrato, limite, quantidade_saques, limite_saqu
 
     elif valor_saque > 0:
         saldo -= valor_saque
-        extrato += f"Saque:\t\tR$ {valor_saque:.2f}\n"
+        extrato += f"{time.strftime('%d/%m/%y %X')}  |    Saque      | (R$ {valor_saque:.2f})\n"
         quantidade_saques += 1
         print("\n=== Saque realizado com sucesso! ===")
 
@@ -125,12 +126,14 @@ def menu_contas():
     menu_contas = f'''
     Olá, ,
 
-    [1] Acessar conta
-    [2] Criar conta
+    [1] Acessar conta corrente
+    [2] Criar conta corrente
     [3] Listar contas
 
     [9] menu de Usuários
     [0] Encerrar
+    
+    Digite a opção desejada e telcle [Enter]
     => '''
     return input(menu_contas)
 
@@ -159,8 +162,6 @@ def acesso_menu_operacoes():
     extrato = ""
     quantidade_saques = 0
     LIMITE_SAQUES = 3
-    usuarios = []
-    contas = []
 
 
     while True:
@@ -216,9 +217,9 @@ def acesso_menu_contas():
     
         if opcao == '1':
         
-            conta = input("Informe a conta: ")
+            conta_cc = input("Informe a conta: ")
 
-            if conta in contas:
+            if conta_cc in contas:
             acesso_menu_operacoes()
 
             else:
@@ -226,11 +227,11 @@ def acesso_menu_contas():
 
         elif opcao == '2':
         
-            numero_conta = len(contas) + 1
-            conta = criar_conta(AGENCIA, numero_conta, usuarios)
+            conta_cc = len(contas) + 1
+            conta_cc = criar_conta(AGENCIA, conta_cc, usuarios)
 
-            if conta:
-                contas.append(conta)
+            if conta_cc:
+                contas.append(conta_cc)
 
         elif opcao == '3':
             listar_contas(contas)
@@ -264,7 +265,7 @@ def acesso_menu_usuarios():
 
             else:
                 print("usuario não encontrado, crie um usuário.")
-                acesso_menu_usuarios    
+                acesso_menu_usuarios()    
 
         elif opcao == '2':
             criar_usuario(usuarios)
