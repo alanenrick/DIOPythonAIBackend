@@ -2,60 +2,79 @@ import time
 from decimal import Decimal
 
 decimal_precision = Decimal('0.01')
+saldo = Decimal('0')
+limite = Decimal('500')
+extrato = ""
+quantidade_saques = 0
+LIMITE_SAQUES = 3
+
 usuarios = []
 contas = []
-LIMITE_SAQUES = 3
-AGENCIA = 0001
 
-def filtrar_usuario(cpf, usuarios):
-    
-    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
-    
-    return usuarios_filtrados[0] if usuarios_filtrados else None
+AGENCIA = "0001"
 
-def criar_usuario(usuarios):
+def filtrar_usuario(cpf, usuarios):    # Verificar se usuário exite
+    
+    usuario_encontrado = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    
+    return usuario_encontrado[0] if usuario_encontrado else None
+
+def criar_usuario(usuarios):    # Criar usuário
     cpf = input("Informe o CPF (somente números): ")
     usuario = filtrar_usuario(cpf, usuarios)
 
-    if usuario:
+    if usuario:    # Não permite duplicidade de usuários
         print("\n CPF já cadastrado, selecione a opção [Entra].")
         return
-    
-    nome = input("Informe seu nome completo: ")
-    data_nascimento = input("Informe sua data de nascimento(dd-mm-aaaa): ")
-    endereco = input("Informe seu endereço (logradouro, nro - bairro - cidade/sigla estado): ")
 
-    usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
+    else:    # Continuar criando usuário
+        nome = input("Informe seu nome completo: ")
+        data_nascimento = input("Informe sua data de nascimento(dd-mm-aaaa): ")
+        endereco = input("Informe seu endereço (logradouro, nro - bairro - cidade/sigla estado): ")
 
-    print("Usuário criado com sucesso!")
+        usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
 
-def criar_conta(agencia, conta_cc, usuarios):
+        print("Usuário criado com sucesso!")
+        return
+
+
+def criar_conta(agencia, conta_cc, usuarios):    # Criar conta corrente
     cpf = input("Informe o CPF do usuário: ")
     usuario = filtrar_usuario(cpf, usuarios)
 
-    if usuario:
+    if usuario: # Vincula a conta a um usuário
         print("\n Conta corrente criada com sucesso!")
         return {"agencia": AGENCIA, "conta_cc": conta_cc, "usuario": usuario}
     
     else:
         print("\nUsuário não encontrado, criação de conta encerrada!")
 
-def filtrar_contas(cpf, contas):
-    contas_filtradas = [conta_cc for conta_cc in contas if conta_cc['usuario']['cpf'] == cpf]
-    return contas_filtradas if contas_filtradas else None
+
+# def filtrar_contas(cpf, contas):    # Verificar se a conta existe
+    # conta_encontrada = [conta_cc for conta_cc in contas if conta_cc['usuario']['cpf'] == cpf]
+    # return conta_encontrada if conta_encontrada else None
+
+def filtrar_contas(cpf, contas):    # verificar se a conta existe
+    if conta_cc:
+        print(f"Contas de {usuario}:")
+        for conta_cc in contas:
+            print(f"-C/C: {conta_cc['conta_cc']}")
+
+    else:
+        print("Usuário não possui contas cadastradas.")
 
 
-def listar_contas(contas):
+def listar_contas(contas):    # Exibir lista de contas
     for conta_cc in contas:
         linha = f"""\
             Agência:\t{conta_cc['agencia']}
-            C/C:\t\t{conta_cc['numero_conta']}
+            C/C:\t\t{conta_cc['conta_cc']}
             Titular:\t{conta_cc['usuario']['nome']}
         """
         print("=" * 100)
         print(linha)   
 
-def depositar(saldo, valor_deposito, extrato):
+def depositar(saldo, valor_deposito, extrato):    # Operação de depósito
     if valor_deposito > 0:
         saldo += valor_deposito
         extrato += f"{time.strftime('%d/%m/%y %X')}  |    Depósito   |  R$ {valor_deposito:.2f}\n"
@@ -64,7 +83,7 @@ def depositar(saldo, valor_deposito, extrato):
         print("\nValor de depósito inválido. O valor deve ser maior que zero.")
 
 
-def sacar(*, saldo, valor_saque, extrato, limite, quantidade_saques, limite_saques):
+def sacar(*, saldo, valor_saque, extrato, limite, quantidade_saques, limite_saques):    # Operação de saque
     excedeu_saldo = valor_saque > saldo
     excedeu_limite = valor_saque > limite
     excedeu_saques = quantidade_saques >= limite_saques
@@ -89,7 +108,7 @@ def sacar(*, saldo, valor_saque, extrato, limite, quantidade_saques, limite_saqu
 
     return saldo, extrato
 
-def exibir_extrato(saldo, /, *, extrato):
+def exibir_extrato(saldo, /, *, extrato):    # Operação de exibição de extrato
     
     data_hora = time.localtime()
     data = time.strftime('%d/%m/%y',data_hora)
@@ -108,7 +127,7 @@ def exibir_extrato(saldo, /, *, extrato):
     print("======================= FIM =======================")
 
 
-def menu_usuarios():
+def menu_usuarios(): # Primeiro menu para criar ou acessar um usuário existente
 
     menu_usuarios = f'''
     Olá, seja bem vindo(a)!
@@ -121,7 +140,7 @@ def menu_usuarios():
     => '''
     return input(menu_usuarios)
 
-def menu_contas():
+def menu_contas():    # Segundo menu para Criar, Acessar ou Listar contas
 
     menu_contas = f'''
     Olá, ,
@@ -137,9 +156,9 @@ def menu_contas():
     => '''
     return input(menu_contas)
 
-def menu_operacoes():
+def menu_operacoes():    # Terceiro menu para realizar as operações de Depósito, Saque e Extrato
 
-    menu_operacoes = f"""
+    menu_operacoes = f'''
     Olá, , Conta: 
         
     [1] Depositar
@@ -151,18 +170,11 @@ def menu_operacoes():
 
 
     Digite a opção desejada e telcle [Enter]
-    => """
+    => '''
 
     return input(menu_operacoes)
     
-def acesso_menu_operacoes():
-
-    saldo = Decimal('0')
-    limite = Decimal('500')
-    extrato = ""
-    quantidade_saques = 0
-    LIMITE_SAQUES = 3
-
+def acesso_menu_operacoes():    # Acesso ao terceiro menu
 
     while True:
     
@@ -210,7 +222,7 @@ def acesso_menu_operacoes():
         
 
 
-def acesso_menu_contas():
+def acesso_menu_contas():    # Acesso ao segundo menu
 
     while True:
         opcao = menu_contas()
@@ -219,8 +231,9 @@ def acesso_menu_contas():
         
             conta_cc = input("Informe a conta: ")
 
-            if conta_cc in contas:
-            acesso_menu_operacoes()
+            if conta_cc:
+                print("Acessando a conta.")
+                acesso_menu_operacoes()
 
             else:
                 print("Conta não encontrada, use uma conta valida ou crie uma conta!")    
@@ -249,7 +262,7 @@ def acesso_menu_contas():
 
 
 
-def acesso_menu_usuarios():
+def acesso_menu_usuarios():    # Acesso ao primeiro menu
     
     while True:
 
@@ -280,4 +293,4 @@ def acesso_menu_usuarios():
 
 
 
-acesso_menu_usuarios()
+acesso_menu_usuarios()    # Start no programa
