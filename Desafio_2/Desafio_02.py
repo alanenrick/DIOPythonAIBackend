@@ -3,7 +3,7 @@ from decimal import Decimal
 
 decimal_precision = Decimal('0.01')
 
-def menu():
+def menu():     # Função menu
 
     menu = f"""
     Seja bem vindo(a)!
@@ -23,65 +23,65 @@ def menu():
     => """
     return input(menu)
 
-def depositar(saldo, extrato):
+# def depositar(saldo, extrato):      # Função depositar
 
-    valor_deposito = Decimal(input("Informe o valor do depósito: R$ "))
+    # valor_deposito = Decimal(input("Informe o valor do depósito: R$ "))
         
-    if valor_deposito > 0:
+    # if valor_deposito > 0:
             
-        saldo += valor_deposito
+        # saldo += valor_deposito
             
-        extrato += f"{time.strftime('%d/%m/%y %X')}  |    Depósito   |  R$ {valor_deposito:.2f}\n"
+        # extrato += f"{time.strftime('%d/%m/%y %X')}  |    Depósito   |  R$ {valor_deposito:.2f}\n"
 
-        print(f"Depósito realizado com sucesso!")
+        # print(f"Depósito realizado com sucesso!")
         
-    else:
-        print("Operação falhou! O valor informado é inválido.")
+    # else:
+        # print("Operação falhou! O valor informado é inválido.")
 
-def sacar(saldo, extrato, quantidade_saques, limite, LIMITE_SAQUES):
+# def sacar(saldo, extrato, quantidade_saques, limite, LIMITE_SAQUES):        # Função sacar
     
-    valor_saque = Decimal(input("Informe o valor do saque: R$ "))
+    # valor_saque = Decimal(input("Informe o valor do saque: R$ "))
 
-    if 0 < valor_saque <= saldo and valor_saque <= limite and quantidade_saques < LIMITE_SAQUES:
+    # if 0 < valor_saque <= saldo and valor_saque <= limite and quantidade_saques < LIMITE_SAQUES:
             
-        saldo -= valor_saque
+        # saldo -= valor_saque
             
-        extrato += f"{time.strftime('%d/%m/%y %X')}  |    Saque      | (R$ {valor_saque:.2f})\n"
+        # extrato += f"{time.strftime('%d/%m/%y %X')}  |    Saque      | (R$ {valor_saque:.2f})\n"
             
-        quantidade_saques += 1
+        # quantidade_saques += 1
                 
-        Print("Saque ralizado com sucesso!")
+        # Print("Saque ralizado com sucesso!")
        
-    else:
-        print("Operação falhou! Verifique seu limite de saque ou quantidade de saques.")
+    # else:
+        # print("Operação falhou! Verifique seu limite de saque ou quantidade de saques.")
 
-def exibir_extrato(saldo, extrato):
+# def exibir_extrato(saldo, extrato):     # Função extrato
 
-    data_hora = time.localtime()
-    data = time.strftime('%d/%m/%y',data_hora)
-    hora = time.strftime('%H:%M:%S',data_hora)
+    # data_hora = time.localtime()
+    # data = time.strftime('%d/%m/%y',data_hora)
+    # hora = time.strftime('%H:%M:%S',data_hora)
 
-    extrato_formatado = f"Não há registro de movimentações.\n" if not extrato else extrato
+    # extrato_formatado = f"Não há registro de movimentações.\n" if not extrato else extrato
         
-    saldo_formatado = f"Saldo em {data} {hora}:           R$ {saldo:.2f}"
+    # saldo_formatado = f"Saldo em {data} {hora}:           R$ {saldo:.2f}"
 
-    print("\n===================== EXTRATO =====================")
-    print("\n===================================================")
-    print("Data/Hora          |   Operação    |    Valor")
-    print("===================================================")
-    print(extrato_formatado)
-    print(f"\n{saldo_formatado}")
-    print("======================= FIM =======================")
+    # print("\n===================== EXTRATO =====================")
+    # print("\n===================================================")
+    # print("Data/Hora          |   Operação    |    Valor")
+    # print("===================================================")
+    # print(extrato_formatado)
+    # print(f"\n{saldo_formatado}")
+    # print("======================= FIM =======================")
 
-def filtrar_usuario(cpf, usuarios):
+def filtrar_usuario(cpf, usuarios):     # Função filtar usuário
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
     return usuarios_filtrados[0] if usuarios_filtrados else None
 
-def criar_usuario(usuarios):
+def criar_usuario(usuarios):        # Função criar usuário
     cpf = input("\nInforme o CPF (somente números): ")
     usuario = filtrar_usuario(cpf, usuarios)
     
-    if usuario:
+    if usuario:     # Verificar se usuário já existe
         print("\nCPF vinculado a um usuário existente.")
         return
     
@@ -94,7 +94,7 @@ def criar_usuario(usuarios):
     print("Usuário criado com sucesso!")     
         
 
-def criar_conta(agencia, numero_conta, usuarios):
+def criar_conta(agencia, numero_conta, usuarios):       # Função criar conta
     numero_conta = len(contas) + 1 # Retirar caso gere falha
     cpf = input("Informe o CPF(somente números): ")
     usuario = filtrar_usuario(cpf, usuarios)
@@ -108,7 +108,7 @@ def criar_conta(agencia, numero_conta, usuarios):
     else:
         print("Usuário não encontrado. Use um usuário válido ou crie um novo.")        
 
-def listar_contas(contas):
+def listar_contas(contas):      # Função listar contas
     for conta in contas:
         linha = f"""\
             Agência:\t{conta['agencia']}
@@ -119,7 +119,7 @@ def listar_contas(contas):
         print(linha)
         
                 
-def main():
+def acesso_menu():      # Função acessar menu
     
     decimal_precision = Decimal('0.01')
     saldo = Decimal('0')
@@ -136,7 +136,20 @@ def main():
         opcao = menu()
 
         if opcao == "1":    # Função depositar
-            depositar(saldo, extrato)
+            
+            valor_deposito = Decimal(input("Informe o valor do depósito: R$ "))
+        
+            if valor_deposito > 0:
+            
+                saldo += valor_deposito
+            
+                extrato += f"{time.strftime('%d/%m/%y %X')}  |    Depósito   |  R$ {valor_deposito:.2f}\n"
+
+                print(f"Depósito realizado com sucesso!")
+        
+            else:
+                print("Operação falhou! O valor informado é inválido.")
+
 
         elif opcao == "2":  # Função sacar
             com_saldo = saldo > 0
@@ -145,12 +158,43 @@ def main():
                 print("Saque não disponível. Verifique seu saldo.")
 
             else :
-                sacar(saldo, extrato, quantidade_saques, limite, LIMITE_SAQUES)
+            
+                valor_saque = Decimal(input("Informe o valor do saque: R$ "))
+
+                if 0 < valor_saque <= saldo and valor_saque <= limite and quantidade_saques < LIMITE_SAQUES:
+            
+                    saldo -= valor_saque
+            
+                    extrato += f"{time.strftime('%d/%m/%y %X')}  |    Saque      | (R$ {valor_saque:.2f})\n"
+            
+                    quantidade_saques += 1
+                
+                    print("Saque ralizado com sucesso!")
+       
+                else:
+                    print("Operação falhou! Verifique seu limite de saque ou quantidade de saques.")
+                
             
         elif opcao == "3":  # Função exibir extrato
-            exibir_extrato(saldo, extrato)
+            
+            data_hora = time.localtime()
+            data = time.strftime('%d/%m/%y',data_hora)
+            hora = time.strftime('%H:%M:%S',data_hora)
+
+            extrato_formatado = f"Não há registro de movimentações.\n" if not extrato else extrato
+        
+            saldo_formatado = f"Saldo em {data} {hora}:           R$ {saldo:.2f}"
+
+            print("\n===================== EXTRATO =====================")
+            print("\n===================================================")
+            print("Data/Hora          |   Operação    |    Valor")
+            print("===================================================")
+            print(extrato_formatado)
+            print(f"\n{saldo_formatado}")
+            print("======================= FIM =======================")
 
         elif opcao == "4":  # Função nova conta
+            agencia = AGENCIA
             criar_conta(agencia, numero_conta, usuarios)    # Caso gere falhas, fazer alteração
             
         elif opcao == "5":  # Função listar contas
@@ -167,4 +211,4 @@ def main():
         else:
             print("Operação inválida, por favor selecione uma opção disponível.")
             
-main()
+acesso_menu()
