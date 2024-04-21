@@ -6,3 +6,7 @@ Então desfiz tudo e resolvi me ater às especificações desse projeto. (pois e
 Implementei as funções e consegui de formar mais sucinta que as mesmas ficassem registradas. para que a função de acesso ao menu ficasse menor.</p>
 
 <p>Gostei muito do resultado desse projeto e do aprendizado que ele me trouxe, além de insights para projetos futuros.</p>
+
+Segue link do repositório com a resolução do desafio:
+
+<a href = "https://github.com/alanenrick/DIOPythonAIBackend/tree/main/Desafio_2"> <sub><strong>Link do repositório.</strong></sub></a>
