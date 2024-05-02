@@ -68,7 +68,7 @@ class Conta:        # Criar Classe Conta
             return False
         
     def novo_numero(self, cliente):
-        cliente.len_contas + 1
+        return self._cliente.len_contas() + 1
 class ContaCorrente(Conta):     # Criar objeto conta corrente derivado de Conta    
     def __init__(self, cliente, numero):
         super().__init__(cliente, numero)
@@ -109,7 +109,7 @@ class Historico:
             {
                 "tipo": transacao.__class__.__name__,
                 "valor": transacao.valor,
-                "data": time.strftime("%d-%m-%Y %H:%M:%s"),
+                "data": time.localtime('%d/%m/%y' '%H:%M:%S'),
             }
         )
 
@@ -178,7 +178,11 @@ def exibir_extrato(conta):
     data = time.strftime('%d/%m/%y',data_hora)
     hora = time.strftime('%H:%M:%S',data_hora)
 
-    extrato_formatado = f"Não há registro de movimentações.\n" if not historico else historico
+    if historico:
+        extrato_formatado = historico
+        
+    else:
+        extrato_formatado = [{"Não há registo de movimentações."}]
         
     saldo_formatado = f"\nSaldo em {data} {hora}:           R$ {conta.saldo:.2f}"
 
@@ -187,7 +191,7 @@ def exibir_extrato(conta):
     print("Data/Hora          |   Operação    |    Valor")
     print("===================================================")
     for transacao in extrato_formatado:
-        print(f"{transacao['data']}  |  {transacao['tipo']}  |  {transacao['valor']}")
+        print(f"{transacao['data']}  |  {transacao['tipo']}  |  R$ {transacao['valor']:.2f}")
     print(saldo_formatado)
     print("======================= FIM =======================")
         
@@ -195,18 +199,18 @@ def exibir_extrato(conta):
 def filtrar_cliente(clientes, cpf):
     cliente_existente = next((cliente for cliente in clientes if isinstance(cliente, PessoaFisica) and cliente.cpf == cpf), None)
     if cliente_existente:
-        return True
+        return cliente_existente
     else:
         return False
 
-
+def verificar_conta(cliente, numero_conta):
+    for conta in cliente.contas:
+        if conta.numero == numero_conta:
+            return conta
+    return None
 
 def verifica_saldo(conta):
-    if conta.saldo > 0:
-        return True
-    
-    else:
-        return False
+    return conta.saldo > 0
 
 def menu_cliente():
     menu_cliente = f"""
@@ -248,6 +252,10 @@ def menu_transacoes():     # Função exibir menu
     => """
     return input(menu_transacoes)
 
+cliente_padrao = PessoaFisica("Rua a, 1 - bairro a - cidade a/BA", "12345678900", "Alan Henrique", "02-05-2024")        # Criado usuário padrão, para agilizar meus testes
+conta_padrao = Conta(cliente_padrao, "001")     # Criada conta padrão com número "001" ,para facilitar meus testes.
+cliente_padrao.adicionar_conta(conta_padrao)
+
 
 def acesso_menu_transacoes(conta):      # Função acessar menu
     while True:
@@ -258,7 +266,7 @@ def acesso_menu_transacoes(conta):      # Função acessar menu
             depositar(conta, valor)
 
         elif opcao == "2":      # Sacar
-            com_saldo = verifica_saldo()
+            com_saldo = verifica_saldo(conta)
             if not com_saldo:   
                 print("Saque não disponível. Verifique seu saldo.")
 
@@ -285,11 +293,7 @@ def acesso_menu_conta(cliente):
         opcao = menu_conta()
         if opcao == "1":        # Acessar menu transações da conta
             numero_conta = input("Digite o número da conta: ")
-            conta_encontrada = None
-            for conta in cliente.contas:
-                if conta.numero == numero_conta:
-                    conta_encontrada = conta
-                    break
+            conta_encontrada = verificar_conta(cliente, numero_conta)
 
             if conta_encontrada:
                 acesso_menu_transacoes(conta_encontrada)
@@ -298,8 +302,8 @@ def acesso_menu_conta(cliente):
         
         elif opcao == "2":      # Criar nova conta
         
-            numero_conta = conta.novo_numero(cliente)
-            conta_nova = Conta(cliente, numero_conta)
+            numero_conta = cliente.len_contas() + 1
+            conta_nova = Conta(cliente, str(numero_conta))
             cliente.adicionar_conta(conta_nova)
             print("Conta criada com sucesso!")
             
@@ -318,7 +322,7 @@ def acesso_menu_conta(cliente):
             print("Operação inválida, por favor selecione uma opção disponível.")
                 
 def acesso_menu_cliente():
-    clientes = []
+    clientes = [cliente_padrao]
     while True:
         opcao = menu_cliente()
         
@@ -352,6 +356,7 @@ def acesso_menu_cliente():
 
         else:
             print("Operação inválida, por favor selecione uma opção disponível.")
+
         
             
 acesso_menu_cliente()
